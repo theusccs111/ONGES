@@ -1,0 +1,6 @@
+namespace ONGES.Campaign.API;
+
+/// <summary>
+/// Classe vazia para servir como entry point do projeto.
+/// </summary>
+public class Program { }
