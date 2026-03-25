@@ -56,7 +56,7 @@ public static class ServiceCollectionExtensions
         services.AddValidatorsFromAssemblyContaining<CreateCampaignCommandValidator>();
 
         // AutoMapper
-        services.AddAutoMapper(typeof(CampaignMappingProfile));
+        services.AddAutoMapper(cfg => cfg.AddMaps(typeof(CampaignMappingProfile).Assembly));
 
         // Infrastructure
         var connectionString = configuration.GetConnectionString("DefaultConnection") 
@@ -79,27 +79,20 @@ public static class ServiceCollectionExtensions
             });
 
             // JWT Bearer
-            options.AddSecurityDefinition("Bearer", new()
+            options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.OpenApiSecurityScheme
             {
                 Name = "Authorization",
-                Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+                Type = Microsoft.OpenApi.SecuritySchemeType.Http,
                 Scheme = "bearer",
                 BearerFormat = "JWT",
                 Description = "JWT Authorization header using the Bearer scheme"
             });
 
-            options.AddSecurityRequirement(new()
+            options.AddSecurityRequirement(document => new Microsoft.OpenApi.OpenApiSecurityRequirement
             {
                 {
-                    new()
-                    {
-                        Reference = new()
-                        {
-                            Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
-                    Array.Empty<string>()
+                    new Microsoft.OpenApi.OpenApiSecuritySchemeReference("Bearer", document),
+                    new List<string>()
                 }
             });
         });
