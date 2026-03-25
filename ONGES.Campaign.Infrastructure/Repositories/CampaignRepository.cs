@@ -7,7 +7,7 @@ using Domain.ValueObjects;
 using Persistence;
 
 /// <summary>
-/// Implementação do repositório de campanhas usando Entity Framework Core.
+/// Campaign repository implementation using Entity Framework Core.
 /// </summary>
 public sealed class CampaignRepository : ICampaignRepository
 {
@@ -27,7 +27,7 @@ public sealed class CampaignRepository : ICampaignRepository
     public async Task<List<CampaignAggregate>> GetAllActiveAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Campaigns
-            .Where(c => c.Status.IsActive)
+            .Where(c => c.Status == CampaignStatus.Active)
             .OrderByDescending(c => c.CreatedAt)
             .ToListAsync(cancellationToken);
     }

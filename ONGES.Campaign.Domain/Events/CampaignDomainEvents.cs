@@ -3,7 +3,7 @@ namespace ONGES.Campaign.Domain.Events;
 using Entities;
 
 /// <summary>
-/// Evento disparado quando uma campanha é criada.
+/// Event raised when a campaign is created.
 /// </summary>
 public sealed class CampaignCreatedDomainEvent : BaseDomainEvent
 {
@@ -35,7 +35,7 @@ public sealed class CampaignCreatedDomainEvent : BaseDomainEvent
 }
 
 /// <summary>
-/// Evento disparado quando uma campanha é atualizada.
+/// Event raised when a campaign is updated.
 /// </summary>
 public sealed class CampaignUpdatedDomainEvent : BaseDomainEvent
 {
@@ -64,7 +64,7 @@ public sealed class CampaignUpdatedDomainEvent : BaseDomainEvent
 }
 
 /// <summary>
-/// Evento disparado quando uma campanha é cancelada.
+/// Event raised when a campaign is cancelled.
 /// </summary>
 public sealed class CampaignCancelledDomainEvent : BaseDomainEvent
 {
@@ -77,7 +77,7 @@ public sealed class CampaignCancelledDomainEvent : BaseDomainEvent
 }
 
 /// <summary>
-/// Evento disparado quando o valor arrecadado de uma campanha é atualizado.
+/// Event raised when the amount raised of a campaign is updated.
 /// </summary>
 public sealed class CampaignAmountRaisedUpdatedDomainEvent : BaseDomainEvent
 {
@@ -94,7 +94,7 @@ public sealed class CampaignAmountRaisedUpdatedDomainEvent : BaseDomainEvent
 }
 
 /// <summary>
-/// Evento disparado quando uma campanha é concluída (meta atingida).
+/// Event raised when a campaign is completed (goal achieved).
 /// </summary>
 public sealed class CampaignCompletedDomainEvent : BaseDomainEvent
 {

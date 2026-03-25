@@ -5,12 +5,11 @@ using ValueObjects;
 using Events;
 
 /// <summary>
-/// Agregado que representa uma Campanha.
-/// Esta é a raiz do agregado Campaign e contém toda a lógica de negócio.
+/// Aggregate representing a Campaign.
+/// This is the Campaign aggregate root and contains all business logic.
 /// </summary>
 public sealed class CampaignAggregate : BaseEntity
 {
-    // Propriedades
     public string Title { get; private set; }
     public string Description { get; private set; }
     public Money FinancialTarget { get; private set; }
@@ -22,14 +21,12 @@ public sealed class CampaignAggregate : BaseEntity
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
 
-    // Propriedade calculada
     public bool GoalAchieved => AmountRaised >= FinancialTarget.Amount;
 
-    // Construtor privado para ser usado apenas por factory methods
     private CampaignAggregate() { }
 
     /// <summary>
-    /// Factory method para criar uma nova Campanha.
+    /// Factory method to create a new Campaign.
     /// </summary>
     public static CampaignAggregate Create(
         string title,
@@ -39,21 +36,20 @@ public sealed class CampaignAggregate : BaseEntity
         DateTime endDate,
         Guid creatorId)
     {
-        // Validações de negócio
         if (string.IsNullOrWhiteSpace(title))
-            throw new ArgumentException("O título da campanha é obrigatório.", nameof(title));
+            throw new ArgumentException("The campaign title is required.", nameof(title));
 
         if (string.IsNullOrWhiteSpace(description))
-            throw new ArgumentException("A descrição da campanha é obrigatória.", nameof(description));
+            throw new ArgumentException("The campaign description is required.", nameof(description));
 
         if (endDate <= DateTime.UtcNow)
-            throw new ArgumentException("A data de término da campanha não pode ser no passado.", nameof(endDate));
+            throw new ArgumentException("The campaign end date cannot be in the past.", nameof(endDate));
 
         if (startDate >= endDate)
-            throw new ArgumentException("A data de início deve ser anterior à data de término.", nameof(startDate));
+            throw new ArgumentException("The start date must be before the end date.", nameof(startDate));
 
         if (creatorId == Guid.Empty)
-            throw new ArgumentException("O ID do criador é obrigatório.", nameof(creatorId));
+            throw new ArgumentException("The creator ID is required.", nameof(creatorId));
 
         var campaign = new CampaignAggregate
         {
@@ -62,14 +58,14 @@ public sealed class CampaignAggregate : BaseEntity
             Description = description,
             FinancialTarget = financialTarget,
             AmountRaised = 0,
-            Status = CampaignStatus.Ativa,
+            Status = CampaignStatus.Active,
             StartDate = startDate,
             EndDate = endDate,
             CreatorId = creatorId,
             CreatedAt = DateTime.UtcNow
         };
 
-        // Disparar evento de domínio
+        // Raise domain event
         campaign.AddDomainEvent(new CampaignCreatedDomainEvent(
             campaign.Id,
             campaign.Title,
@@ -83,19 +79,19 @@ public sealed class CampaignAggregate : BaseEntity
     }
 
     /// <summary>
-    /// Atualiza os dados da campanha.
-    /// Apenas campanha Ativa podem ser editadas.
+    /// Updates the campaign data.
+    /// Only active campaigns can be edited.
     /// </summary>
     public void Update(string title, string description, Money financialTarget, DateTime startDate, DateTime endDate)
     {
         if (!Status.IsActive)
-            throw new InvalidOperationException("Não é possível editar uma campanha que não está ativa.");
+            throw new InvalidOperationException("Cannot edit a campaign that is not active.");
 
         if (endDate <= DateTime.UtcNow)
-            throw new ArgumentException("A data de término da campanha não pode ser no passado.", nameof(endDate));
+            throw new ArgumentException("The campaign end date cannot be in the past.", nameof(endDate));
 
         if (startDate >= endDate)
-            throw new ArgumentException("A data de início deve ser anterior à data de término.", nameof(startDate));
+            throw new ArgumentException("The start date must be before the end date.", nameof(startDate));
 
         Title = title;
         Description = description;
@@ -114,28 +110,28 @@ public sealed class CampaignAggregate : BaseEntity
     }
 
     /// <summary>
-    /// Cancela a campanha.
-    /// Uma campanha cancelada não pode receber mais doações.
+    /// Cancels the campaign.
+    /// A cancelled campaign cannot receive more donations.
     /// </summary>
     public void Cancel()
     {
         if (!Status.IsActive)
-            throw new InvalidOperationException("Apenas campanhas ativas podem ser canceladas.");
+            throw new InvalidOperationException("Only active campaigns can be cancelled.");
 
-        Status = CampaignStatus.Cancelada;
+        Status = CampaignStatus.Cancelled;
         UpdatedAt = DateTime.UtcNow;
 
         AddDomainEvent(new CampaignCancelledDomainEvent(Id));
     }
 
     /// <summary>
-    /// Atualiza o valor arrecadado na campanha.
-    /// Este método é chamado pelo Worker após processar uma doação via mensageria.
+    /// Updates the amount raised in the campaign.
+    /// This method is called by the Worker after processing a donation via messaging.
     /// </summary>
     public void UpdateAmountRaised(decimal newAmount)
     {
         if (newAmount < 0)
-            throw new ArgumentException("O valor arrecadado não pode ser negativo.", nameof(newAmount));
+            throw new ArgumentException("The amount raised cannot be negative.", nameof(newAmount));
 
         AmountRaised = newAmount;
         UpdatedAt = DateTime.UtcNow;
@@ -145,10 +141,10 @@ public sealed class CampaignAggregate : BaseEntity
             AmountRaised,
             FinancialTarget.Amount));
 
-        // Verificar se a meta foi atingida
+        // Check if the goal was achieved
         if (GoalAchieved && Status.IsActive)
         {
-            Status = CampaignStatus.Concluida;
+            Status = CampaignStatus.Completed;
 
             AddDomainEvent(new CampaignCompletedDomainEvent(
                 Id,
@@ -158,7 +154,7 @@ public sealed class CampaignAggregate : BaseEntity
     }
 
     /// <summary>
-    /// Verifica se a campanha pode receber doações.
+    /// Checks if the campaign can receive donations.
     /// </summary>
     public bool CanReceiveDonations()
     {

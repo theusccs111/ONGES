@@ -1,7 +1,7 @@
 namespace ONGES.Campaign.Domain.ValueObjects;
 
 /// <summary>
-/// Value Object que representa a meta financeira de uma campanha.
+/// Value Object representing monetary values.
 /// </summary>
 public sealed class Money : IEquatable<Money>
 {
@@ -11,7 +11,7 @@ public sealed class Money : IEquatable<Money>
     {
         if (amount <= 0)
         {
-            throw new ArgumentException("A meta financeira deve ser maior que zero.", nameof(amount));
+            throw new ArgumentException("The financial target must be greater than zero.", nameof(amount));
         }
 
         Amount = amount;
@@ -56,7 +56,7 @@ public sealed class Money : IEquatable<Money>
     public static Money operator -(Money left, Money right)
     {
         if (left.Amount < right.Amount)
-            throw new InvalidOperationException("Não é possível subtrair um valor maior do que a quantidade disponível.");
+            throw new InvalidOperationException("Cannot subtract a value greater than the available amount.");
         
         return new Money(left.Amount - right.Amount);
     }

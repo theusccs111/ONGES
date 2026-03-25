@@ -4,8 +4,8 @@ using Domain.Interfaces;
 using Repositories;
 
 /// <summary>
-/// Implementação do Unit of Work usando Entity Framework Core.
-/// Gerencia transações e coordena os repositórios.
+/// Unit of Work implementation using Entity Framework Core.
+/// Manages transactions and coordinates repositories.
 /// </summary>
 public sealed class UnitOfWork : IUnitOfWork
 {

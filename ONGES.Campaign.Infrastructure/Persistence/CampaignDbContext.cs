@@ -6,8 +6,8 @@ using Domain.ValueObjects;
 using Domain.Entities;
 
 /// <summary>
-/// DbContext para a aplicação Campaign.
-/// Configura as entidades e suas relações com o banco de dados.
+/// DbContext for the Campaign application.
+/// Configures entities and their database relationships.
 /// </summary>
 public sealed class CampaignDbContext : DbContext
 {
@@ -31,13 +31,10 @@ public sealed class CampaignDbContext : DbContext
     {
         var builder = modelBuilder.Entity<CampaignAggregate>();
 
-        // Configurar a tabela
         builder.ToTable("Campaigns");
 
-        // Configurar chave primária
         builder.HasKey(c => c.Id);
 
-        // Configurar propriedades
         builder.Property(c => c.Id)
             .ValueGeneratedNever();
 
@@ -49,7 +46,6 @@ public sealed class CampaignDbContext : DbContext
             .IsRequired()
             .HasMaxLength(1000);
 
-        // Configurar Value Object Money
         builder.Property(c => c.FinancialTarget)
             .HasConversion(
                 money => money.Amount,
@@ -61,7 +57,6 @@ public sealed class CampaignDbContext : DbContext
             .HasColumnType("decimal(18,2)")
             .HasDefaultValue(0);
 
-        // Configurar Value Object CampaignStatus
         builder.Property(c => c.Status)
             .HasConversion(
                 status => status.Value,
@@ -83,7 +78,6 @@ public sealed class CampaignDbContext : DbContext
 
         builder.Property(c => c.UpdatedAt);
 
-        // Índices
         builder.HasIndex(c => c.Status);
         builder.HasIndex(c => c.CreatorId);
         builder.HasIndex(c => c.CreatedAt);

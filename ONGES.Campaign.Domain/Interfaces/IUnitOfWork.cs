@@ -1,7 +1,7 @@
 namespace ONGES.Campaign.Domain.Interfaces;
 
 /// <summary>
-/// Interface para gerenciar transações e persistência de dados.
+/// Interface for managing transactions and data persistence.
 /// </summary>
 public interface IUnitOfWork : IDisposable
 {

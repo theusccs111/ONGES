@@ -1,10 +1,11 @@
 namespace ONGES.Campaign.API.Middleware;
 
 using Application.DTOs;
-using System.Text.Json;
+using Domain.Exceptions;
+using System.Net;
 
 /// <summary>
-/// Middleware para tratamento global de exceções.
+/// Global exception handler middleware.
 /// </summary>
 public sealed class ExceptionHandlingMiddleware
 {
@@ -25,7 +26,7 @@ public sealed class ExceptionHandlingMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unhandled exception occurred");
+            _logger.LogError(ex, "Unexpected error: {Message}", ex.Message);
             await HandleExceptionAsync(context, ex);
         }
     }
@@ -33,26 +34,34 @@ public sealed class ExceptionHandlingMiddleware
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         context.Response.ContentType = "application/json";
-
-        var response = exception switch
+        context.Response.StatusCode = exception switch
         {
-            KeyNotFoundException => new { StatusCode = 404, message = exception.Message },
-            ArgumentException => new { StatusCode = 400, message = exception.Message },
-            InvalidOperationException => new { StatusCode = 400, message = exception.Message },
-            _ => new { StatusCode = 500, message = "An internal server error occurred" }
+            ValidationException => (int)HttpStatusCode.BadRequest,
+            NotFoundException => (int)HttpStatusCode.NotFound,
+            ArgumentException => (int)HttpStatusCode.BadRequest,
+            InvalidOperationException => (int)HttpStatusCode.BadRequest,
+            _ => (int)HttpStatusCode.InternalServerError
         };
 
-        context.Response.StatusCode = response.StatusCode;
-        return context.Response.WriteAsJsonAsync(new ApiResponse<object>(
-            false,
-            response.message,
-            null,
-            [exception.Message]));
+        var result = new Result<object>
+        {
+            Success = false,
+            Message = exception.Message,
+            Data = null
+        };
+
+        if (exception is ValidationException validationEx)
+        {
+            result.MessageDetail = string.Join("; ",
+                validationEx.Failures.SelectMany(f => f.Value));
+        }
+
+        return context.Response.WriteAsJsonAsync(result);
     }
 }
 
 /// <summary>
-/// Extensões para registrar middlewares.
+/// Extension methods for registering middlewares.
 /// </summary>
 public static class MiddlewareExtensions
 {

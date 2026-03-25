@@ -3,8 +3,8 @@ namespace ONGES.Campaign.Domain.Interfaces;
 using Aggregates;
 
 /// <summary>
-/// Interface do repositório de campanhas.
-/// Define contrato para persistência de agregados Campaign.
+/// Campaign repository interface.
+/// Defines the contract for Campaign aggregate persistence.
 /// </summary>
 public interface ICampaignRepository
 {

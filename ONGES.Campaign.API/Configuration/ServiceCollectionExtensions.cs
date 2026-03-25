@@ -3,20 +3,20 @@ namespace ONGES.Campaign.API.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using MediatR;
 using FluentValidation;
-using AutoMapper;
 using Application.Validators;
 using Application.Mappers;
+using Application.Interfaces;
+using Application.Services;
 using Infrastructure.Configuration;
 
 /// <summary>
-/// Extensões para configurar serviços da aplicação.
+/// Extensions for configuring application services.
 /// </summary>
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Registra todos os serviços da aplicação.
+    /// Registers all application services.
     /// </summary>
     public static IServiceCollection AddApplicationServices(
         this IServiceCollection services,
@@ -25,7 +25,7 @@ public static class ServiceCollectionExtensions
         // JWT Configuration
         var jwtSettings = configuration.GetSection("Jwt");
         var secretKey = jwtSettings["SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey not configured");
-        
+
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -46,17 +46,17 @@ public static class ServiceCollectionExtensions
             };
         });
 
-        // Add Controllers
+        // Controllers
         services.AddControllers();
 
-        // MediatR
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateCampaignCommandValidator).Assembly));
-
         // FluentValidation
-        services.AddValidatorsFromAssemblyContaining<CreateCampaignCommandValidator>();
+        services.AddValidatorsFromAssemblyContaining<CreateCampaignRequestValidator>();
 
         // AutoMapper
         services.AddAutoMapper(cfg => cfg.AddMaps(typeof(CampaignMappingProfile).Assembly));
+
+        // Services
+        services.AddScoped<ICampaignService, CampaignService>();
 
         // Infrastructure
         var connectionString = configuration.GetConnectionString("DefaultConnection") 
@@ -70,7 +70,7 @@ public static class ServiceCollectionExtensions
             {
                 Title = "ONGES - Campaign API",
                 Version = "v1",
-                Description = "API de gestão de campanhas para ONG Esperança Solidária",
+                Description = "Campaign management API for ONG Esperança Solidária",
                 Contact = new()
                 {
                     Name = "ONGES",
@@ -78,7 +78,6 @@ public static class ServiceCollectionExtensions
                 }
             });
 
-            // JWT Bearer
             options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.OpenApiSecurityScheme
             {
                 Name = "Authorization",

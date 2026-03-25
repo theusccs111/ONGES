@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ONGES.Campaign.Domain\ONGES.Campaign.Domain.csproj" />
-    <ProjectReference Include="..\ONGES.Campaign.Application\ONGES.Campaign.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
