@@ -1,31 +1,37 @@
 namespace ONGES.Campaign.Domain.Entities;
 
-/// <summary>
-/// Base class for all domain entities.
-/// Provides common functionality for IDs and domain events.
-/// </summary>
-public abstract class BaseEntity
+public abstract class BaseEntity(Guid id) : IEquatable<BaseEntity>
 {
-    public Guid Id { get; protected set; }
+    public Guid Id { get; init; } = id;
+    public DateTime CreatedAt { get; protected set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; protected set; }
 
     private readonly List<BaseDomainEvent> _domainEvents = [];
-
     public IReadOnlyCollection<BaseDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
-    protected void AddDomainEvent(BaseDomainEvent domainEvent)
+    protected void AddDomainEvent(BaseDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
+    public void ClearDomainEvents() => _domainEvents.Clear();
+
+    public void UpdateChangesDate() => UpdatedAt = DateTime.UtcNow;
+
+    public bool Equals(BaseEntity? other)
     {
-        _domainEvents.Add(domainEvent);
+        if (other is null) return false;
+        return ReferenceEquals(this, other) || Id.Equals(other.Id);
     }
 
-    public void ClearDomainEvents()
+    public override bool Equals(object? obj)
     {
-        _domainEvents.Clear();
+        if (obj is null) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        return obj.GetType() == GetType() && Equals((BaseEntity)obj);
     }
+
+    public override int GetHashCode() => Id.GetHashCode();
+    public static bool operator ==(BaseEntity? left, BaseEntity? right) => Equals(left, right);
+    public static bool operator !=(BaseEntity? left, BaseEntity? right) => !Equals(left, right);
 }
 
-/// <summary>
-/// Base class for domain events.
-/// </summary>
 public abstract class BaseDomainEvent
 {
     public DateTime OccurredAt { get; protected set; } = DateTime.UtcNow;

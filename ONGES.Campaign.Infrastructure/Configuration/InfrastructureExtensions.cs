@@ -1,33 +1,30 @@
 namespace ONGES.Campaign.Infrastructure.Configuration;
 
+using FluentValidation;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Domain.Interfaces;
+using Application.DTOs.Requests;
+using Application.Interfaces;
 using Persistence;
 using Messaging;
+using Services;
+using Validators;
 
-/// <summary>
-/// Extensions for configuring infrastructure in the DI container.
-/// </summary>
-public static class InfrastructureExtensions
+public static class DependencyInjection
 {
-    /// <summary>
-    /// Registers infrastructure services.
-    /// </summary>
-    public static IServiceCollection AddInfrastructureServices(
-        this IServiceCollection services,
-        string connectionString)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        // DbContext
         services.AddDbContext<CampaignDbContext>(options =>
-            options.UseSqlServer(connectionString,
-                builder => builder.MigrationsAssembly(typeof(CampaignDbContext).Assembly.FullName)));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-        // Unit of Work & Repositories
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<ICampaignService, CampaignService>();
+        services.AddSingleton<IMessagePublisher, AzureServiceBusPublisher>();
 
-        // Message Publisher
-        services.AddScoped<IMessagePublisher, RabbitMqPublisher>();
+        services.AddScoped<IValidator<CreateCampaignRequest>, CreateCampaignRequestValidator>();
+        services.AddScoped<IValidator<UpdateCampaignRequest>, UpdateCampaignRequestValidator>();
 
         return services;
     }

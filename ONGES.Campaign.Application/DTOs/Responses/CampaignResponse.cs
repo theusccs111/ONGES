@@ -1,9 +1,6 @@
-namespace ONGES.Campaign.Application.DTOs;
+namespace ONGES.Campaign.Application.DTOs.Responses;
 
-/// <summary>
-/// Response DTO for campaign data.
-/// </summary>
-public record CampaignResponse(
+public sealed record CampaignResponse(
     Guid Id,
     string Title,
     string Description,

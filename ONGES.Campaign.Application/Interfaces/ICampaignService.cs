@@ -1,18 +1,15 @@
 namespace ONGES.Campaign.Application.Interfaces;
 
-using DTOs;
+using DTOs.Requests;
+using DTOs.Responses;
+using Domain.Shared.Results;
 
-/// <summary>
-/// Service interface for campaign operations.
-/// </summary>
 public interface ICampaignService
 {
-    Result<CampaignResponse> GetById(Guid id);
-    Result<IEnumerable<CampaignResponse>> GetAll();
-    Result<IEnumerable<TransparencyPanelResponse>> GetAllActive();
-    Result<CampaignResponse> Create(CreateCampaignRequest request, Guid creatorId);
-    Result<CampaignResponse> Update(Guid id, UpdateCampaignRequest request);
-    Result<CampaignResponse> Cancel(Guid id);
-    Result<CampaignResponse> UpdateAmountRaised(Guid campaignId, decimal newAmount);
-    Task CompleteAsync();
+    Task<Result<CampaignResponse>> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<Result<IEnumerable<CampaignResponse>>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<Result<IEnumerable<TransparencyPanelResponse>>> GetAllActiveAsync(CancellationToken cancellationToken = default);
+    Task<Result<CampaignResponse>> CreateAsync(CreateCampaignRequest request, Guid creatorId, CancellationToken cancellationToken = default);
+    Task<Result<CampaignResponse>> UpdateAsync(Guid id, UpdateCampaignRequest request, CancellationToken cancellationToken = default);
+    Task<Result<CampaignResponse>> CancelAsync(Guid id, CancellationToken cancellationToken = default);
 }

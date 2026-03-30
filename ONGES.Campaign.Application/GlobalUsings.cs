@@ -1,2 +1,1 @@
-global using FluentValidation;
-global using AutoMapper;
+// Implicit usings are enabled via project settings.
