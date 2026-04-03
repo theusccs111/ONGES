@@ -11,6 +11,7 @@ using Persistence;
 using Messaging;
 using Services;
 using Validators;
+using Workers;
 
 public static class DependencyInjection
 {
@@ -26,6 +27,20 @@ public static class DependencyInjection
         services.AddScoped<IValidator<CreateCampaignRequest>, CreateCampaignRequestValidator>();
         services.AddScoped<IValidator<UpdateCampaignRequest>, UpdateCampaignRequestValidator>();
 
+        // Registrar o DonationWorker como HostedService
+        var serviceBusConfig = configuration.GetSection("AzureServiceBus");
+        var connectionString = serviceBusConfig["ConnectionString"] ?? string.Empty;
+        var topicName = serviceBusConfig["TopicName"] ?? "donates-topic";
+        var subscriptionName = serviceBusConfig["SubscriptionName"] ?? "campaigns-donations-subscription";
+
+        services.AddHostedService(sp => new DonationWorker(
+            sp.GetRequiredService<ILogger<DonationWorker>>(),
+            sp,
+            connectionString,
+            topicName,
+            subscriptionName));
+
         return services;
     }
 }
+

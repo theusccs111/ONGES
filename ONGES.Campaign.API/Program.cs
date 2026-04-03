@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
-using ONGES.Campaign.API.Endpoints;
 using ONGES.Campaign.Infrastructure.Configuration;
 using ONGES.Campaign.Infrastructure.Persistence;
 
@@ -16,7 +15,7 @@ public class Program
 
         builder.Services.AddInfrastructure(builder.Configuration);
 
-        builder.Services.AddAuthorization();
+        builder.Services.AddControllersWithViews();
         builder.Services.AddOpenApi();
 
         builder.Services.AddSwaggerGen(c =>
@@ -111,9 +110,10 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
-        app.MapEndpoints();
+        app.MapControllers();
 
         app.Run();
     }

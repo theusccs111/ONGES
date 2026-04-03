@@ -1,0 +1,26 @@
+- campanha
+vai ter um worker que vai ficar escutando o topico para poder atualizar o valor doado ao todo
+
+db-onges-user
+Server=tcp:server-db-onges.database.windows.net,1433;Initial Catalog=db-onges-user;Persist Security Info=False;User ID=ongesadmin;Password=Senha#123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+
+db-onges-donate
+Server=tcp:server-db-onges.database.windows.net,1433;Initial Catalog=db-onges-donate;Persist Security Info=False;User ID=ongesadmin;Password=Senha#123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+
+db-onges-campaign
+Server=tcp:server-db-onges.database.windows.net,1433;Initial Catalog=db-onges-campaign;Persist Security Info=False;User ID=ongesadmin;Password=Senha#123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+
+Service Bus
+String de Conexão: Endpoint=sb://sb-onges.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=UMMhJzyrUY3GotAMB9y1AzLC8yIwSdaiY+ASbEhHD/g=
+
+Tópicos
+- users-topic
+- campaigns-topic
+- donates-topic
+
+"Jwt": {
+  "Key": "9y4XJg0aTphzFJw3TvksRvqHXd+Q4VB8f7ZvU08N+9Q=",
+  "Issuer": "ONGES.Users",
+  "Audience": "API",
+  "ExpiresMinutes": "120"
+}

@@ -102,6 +102,23 @@ public class CampaignService(
         return Result.Success(MapToResponse(campaign));
     }
 
+    public async Task<Result<CampaignResponse>> UpdateAmountRaisedAsync(Guid campaignId, decimal amount, CancellationToken cancellationToken = default)
+    {
+        var campaign = await unitOfWork.Campaigns.GetByIdAsync(campaignId, cancellationToken);
+
+        if (campaign is null)
+            return Result.Failure<CampaignResponse>(new Error("404", "Campanha não encontrada."));
+
+        campaign.UpdateAmountRaised(amount);
+
+        await unitOfWork.Campaigns.UpdateAsync(campaign, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await PublishDomainEventsAsync(campaign, cancellationToken);
+
+        return Result.Success(MapToResponse(campaign));
+    }
+
     private async Task PublishDomainEventsAsync(CampaignAggregate campaign, CancellationToken cancellationToken)
     {
         foreach (var domainEvent in campaign.DomainEvents)
