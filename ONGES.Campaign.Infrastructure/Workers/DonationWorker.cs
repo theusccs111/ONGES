@@ -72,7 +72,7 @@ public class DonationWorker : BackgroundService
             if (donationMessage == null)
             {
                 _logger.LogWarning("Mensagem de doação inválida");
-                await args.AbandonMessageAsync();
+                await args.AbandonMessageAsync(args.Message);
                 return;
             }
 
@@ -87,19 +87,19 @@ public class DonationWorker : BackgroundService
             {
                 _logger.LogWarning("Falha ao atualizar valor arrecadado da campanha {CampaignId}: {Error}",
                     donationMessage.CampaignId, result);
-                await args.AbandonMessageAsync();
+                await args.AbandonMessageAsync(args.Message);
                 return;
             }
 
             _logger.LogInformation("Valor arrecadado atualizado com sucesso para a campanha {CampaignId}",
                 donationMessage.CampaignId);
 
-            await args.CompleteMessageAsync();
+            await args.CompleteMessageAsync(args.Message);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao processar mensagem de doação");
-            await args.AbandonMessageAsync();
+            await args.AbandonMessageAsync(args.Message);
         }
     }
 
