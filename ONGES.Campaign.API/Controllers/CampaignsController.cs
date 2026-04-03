@@ -23,7 +23,6 @@ public class CampaignsController : ControllerBase
     /// Obtém uma campanha por ID
     /// </summary>
     [HttpGet("{id:guid}")]
-    [Authorize(Roles = "Gestor")]
     public async Task<ActionResult<CampaignResponse>> GetById(Guid id, CancellationToken cancellationToken)
     {
         var result = await _campaignService.GetByIdAsync(id, cancellationToken);
@@ -38,7 +37,6 @@ public class CampaignsController : ControllerBase
     /// Obtém todas as campanhas
     /// </summary>
     [HttpGet]
-    [Authorize(Roles = "Gestor")]
     public async Task<ActionResult<IEnumerable<CampaignResponse>>> GetAll(CancellationToken cancellationToken)
     {
         var result = await _campaignService.GetAllAsync(cancellationToken);
