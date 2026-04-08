@@ -106,12 +106,12 @@ public sealed class CampaignAggregate : BaseEntity
         AddDomainEvent(new CampaignCancelledDomainEvent(Id));
     }
 
-    public void UpdateAmountRaised(decimal newAmount)
+    public void UpdateAmountRaised(decimal donationAmount)
     {
-        if (newAmount < 0)
-            throw new ArgumentException("O valor arrecadado não pode ser negativo.", nameof(newAmount));
+        if (donationAmount <= 0)
+            throw new ArgumentException("O valor da doação deve ser maior que zero.", nameof(donationAmount));
 
-        AmountRaised = newAmount;
+        AmountRaised += donationAmount;
         UpdateChangesDate();
 
         AddDomainEvent(new CampaignAmountRaisedUpdatedDomainEvent(

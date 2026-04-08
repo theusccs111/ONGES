@@ -102,14 +102,14 @@ public class CampaignService(
         return Result.Success(MapToResponse(campaign));
     }
 
-    public async Task<Result<CampaignResponse>> UpdateAmountRaisedAsync(Guid campaignId, decimal amount, CancellationToken cancellationToken = default)
+    public async Task<Result<CampaignResponse>> UpdateAmountRaisedAsync(Guid campaignId, decimal donationAmount, CancellationToken cancellationToken = default)
     {
         var campaign = await unitOfWork.Campaigns.GetByIdAsync(campaignId, cancellationToken);
 
         if (campaign is null)
             return Result.Failure<CampaignResponse>(new Error("404", "Campanha não encontrada."));
 
-        campaign.UpdateAmountRaised(amount);
+        campaign.UpdateAmountRaised(donationAmount);
 
         await unitOfWork.Campaigns.UpdateAsync(campaign, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);

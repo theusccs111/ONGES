@@ -56,7 +56,12 @@ public class CampaignsController : ControllerBase
         CreateCampaignRequest request,
         CancellationToken cancellationToken)
     {
-        var creatorId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? Guid.Empty.ToString());
+        var creatorIdClaim =
+            User.FindFirst("UserId")?.Value ??
+            User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (!Guid.TryParse(creatorIdClaim, out var creatorId))
+            return Unauthorized(new { message = "Token JWT inválido: claim de usuário não encontrada." });
 
         var result = await _campaignService.CreateAsync(request, creatorId, cancellationToken);
 
