@@ -1,9 +1,11 @@
 namespace ONGES.Campaign.Infrastructure.Configuration;
 
+using Azure.Messaging.ServiceBus;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Domain.Interfaces;
 using Application.DTOs.Requests;
 using Application.Interfaces;
@@ -11,7 +13,6 @@ using Persistence;
 using Messaging;
 using Services;
 using Validators;
-using Workers;
 
 public static class DependencyInjection
 {
@@ -27,18 +28,13 @@ public static class DependencyInjection
         services.AddScoped<IValidator<CreateCampaignRequest>, CreateCampaignRequestValidator>();
         services.AddScoped<IValidator<UpdateCampaignRequest>, UpdateCampaignRequestValidator>();
 
-        // Registrar o DonationWorker como HostedService
-        var serviceBusConfig = configuration.GetSection("AzureServiceBus");
-        var connectionString = serviceBusConfig["ConnectionString"] ?? string.Empty;
-        var topicName = serviceBusConfig["TopicName"] ?? "donates-topic";
-        var subscriptionName = serviceBusConfig["SubscriptionName"] ?? "campaigns-donations-subscription";
+        services.Configure<ServiceBusOptions>(configuration.GetSection(ServiceBusOptions.SectionName));
 
-        services.AddHostedService(sp => new DonationWorker(
-            sp.GetRequiredService<ILogger<DonationWorker>>(),
-            sp,
-            connectionString,
-            topicName,
-            subscriptionName));
+        services.AddSingleton(sp =>
+        {
+            var options = configuration.GetSection(ServiceBusOptions.SectionName).Get<ServiceBusOptions>()!;
+            return new ServiceBusClient(options.ConnectionString);
+        });
 
         return services;
     }
