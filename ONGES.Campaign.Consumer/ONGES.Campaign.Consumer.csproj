@@ -7,13 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.19.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ONGES.Campaign.Application\ONGES.Campaign.Application.csproj" />
     <ProjectReference Include="..\ONGES.Campaign.Infrastructure\ONGES.Campaign.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\ONGES.Contracts\ONGES.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

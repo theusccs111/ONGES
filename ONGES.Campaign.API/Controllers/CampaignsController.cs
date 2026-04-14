@@ -34,6 +34,21 @@ public class CampaignsController : ControllerBase
     }
 
     /// <summary>
+    /// Obtém uma campanha por ID
+    /// </summary>
+    [HttpGet("internal/{id:guid}")]
+    [AllowAnonymous]
+    public async Task<ActionResult<CampaignResponse>> GetByIdInternal(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await _campaignService.GetByIdAsync(id, cancellationToken);
+
+        if (!result.IsSuccess)
+            return NotFound(result);
+
+        return Ok(result.Value);
+    }
+
+    /// <summary>
     /// Obtém todas as campanhas
     /// </summary>
     [HttpGet]
