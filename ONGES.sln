@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.32014.148
+# Visual Studio Version 18
+VisualStudioVersion = 18.4.11626.88 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ONGES.Campaign.Domain", "ONGES.Campaign.Domain\ONGES.Campaign.Domain.csproj", "{ADD4B3F0-00A1-4D0C-8B6A-8B6A8B6A8B6A}"
 EndProject
@@ -12,8 +12,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ONGES.Campaign.API", "ONGES.Campaign.API\ONGES.Campaign.API.csproj", "{DDD4B3F0-00A1-4D0C-8B6A-8B6A8B6A8B6D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ONGES.Campaign.Consumer", "ONGES.Campaign.Consumer\ONGES.Campaign.Consumer.csproj", "{EED4B3F0-00A1-4D0C-8B6A-8B6A8B6A8B6E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ONGES.Contracts", "..\ONGES.Contracts\ONGES.Contracts.csproj", "{39497AB0-91DE-4BBE-AB71-52C465E18814}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,18 +83,6 @@ Global
 		{EED4B3F0-00A1-4D0C-8B6A-8B6A8B6A8B6E}.Release|x64.Build.0 = Release|Any CPU
 		{EED4B3F0-00A1-4D0C-8B6A-8B6A8B6A8B6E}.Release|x86.ActiveCfg = Release|Any CPU
 		{EED4B3F0-00A1-4D0C-8B6A-8B6A8B6A8B6E}.Release|x86.Build.0 = Release|Any CPU
-		{39497AB0-91DE-4BBE-AB71-52C465E18814}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{39497AB0-91DE-4BBE-AB71-52C465E18814}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{39497AB0-91DE-4BBE-AB71-52C465E18814}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{39497AB0-91DE-4BBE-AB71-52C465E18814}.Debug|x64.Build.0 = Debug|Any CPU
-		{39497AB0-91DE-4BBE-AB71-52C465E18814}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{39497AB0-91DE-4BBE-AB71-52C465E18814}.Debug|x86.Build.0 = Debug|Any CPU
-		{39497AB0-91DE-4BBE-AB71-52C465E18814}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{39497AB0-91DE-4BBE-AB71-52C465E18814}.Release|Any CPU.Build.0 = Release|Any CPU
-		{39497AB0-91DE-4BBE-AB71-52C465E18814}.Release|x64.ActiveCfg = Release|Any CPU
-		{39497AB0-91DE-4BBE-AB71-52C465E18814}.Release|x64.Build.0 = Release|Any CPU
-		{39497AB0-91DE-4BBE-AB71-52C465E18814}.Release|x86.ActiveCfg = Release|Any CPU
-		{39497AB0-91DE-4BBE-AB71-52C465E18814}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
