@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using ONGES.Campaign.Infrastructure.Configuration;
 using ONGES.Campaign.Infrastructure.Persistence;
+using Prometheus;
 
 namespace ONGES.Campaign.API;
 
@@ -109,10 +110,12 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseHttpMetrics();
 
         app.UseAuthentication();
         app.UseAuthorization();
 
+        app.MapMetrics();
         app.MapControllers();
 
         app.Run();
