@@ -1,10 +1,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-COPY ["ONGES.Campaign.API/ONGES.Campaign.API.csproj", "ONGES.Campaign.API/"]
-COPY ["ONGES.Campaign.Application/ONGES.Campaign.Application.csproj", "ONGES.Campaign.Application/"]
-COPY ["ONGES.Campaign.Infrastructure/ONGES.Campaign.Infrastructure.csproj", "ONGES.Campaign.Infrastructure/"]
-COPY ["ONGES.Campaign.Domain/ONGES.Campaign.Domain.csproj", "ONGES.Campaign.Domain/"]
+COPY ONGES.Campaign.API/ONGES.Campaign.API.csproj ONGES.Campaign.API/
+COPY ONGES.Campaign.Application/ONGES.Campaign.Application.csproj ONGES.Campaign.Application/
+COPY ONGES.Campaign.Infrastructure/ONGES.Campaign.Infrastructure.csproj ONGES.Campaign.Infrastructure/
+COPY ONGES.Campaign.Domain/ONGES.Campaign.Domain.csproj ONGES.Campaign.Domain/
 
 RUN dotnet restore "ONGES.Campaign.API/ONGES.Campaign.API.csproj"
 
